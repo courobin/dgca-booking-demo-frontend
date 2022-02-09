@@ -35,8 +35,3 @@ jobs:
         CF_PASSWORD: ${{ secrets.CF_PASSWORD }}
         CF_DOCKER_USERNAME: ${{ secrets.CF_DOCKER_USERNAME }}
         CF_DOCKER_PASSWORD: ${{ secrets.CF_DOCKER_PASSWORD }}
-        
-    - uses: steebchen/kubectl@v2.0.0
-      with:
-        config: ${{ secrets.DEV_KUBECONFIG }}
-        command: apply -n dgca-test -f ./k8s/dev_deployment.yaml
