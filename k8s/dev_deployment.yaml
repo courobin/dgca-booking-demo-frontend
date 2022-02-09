@@ -46,7 +46,7 @@ spec:
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
-                name: dgca-booking-demo-frontend-service
+                name: dgca-booking-demo-frontend
           ports:
             - name: http
               containerPort: 8080
