@@ -63,3 +63,49 @@ spec:
             httpGet:
               path: /
               port: 8080
+              
+              ---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: uaa-service-instance-booking-demo-frontend
+  namespace: dgca-test
+spec:
+  clusterServiceClassExternalName: xsuaa
+  clusterServicePlanExternalName: application
+  parameters:
+    xsappname: xsuaa-kyma-booking-demo-frontend
+    tenant-mode: dedicated
+    oauth2-configuration:
+      redirect-uris:
+        - https://*/**
+
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: uaa-service-binding-booking-demo-frontend
+  namespace: dgca-test
+spec:
+  instanceRef:
+    name: uaa-service-instance-booking-demo-frontend
+
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: destination-service-instance-booking-demo-frontend
+  namespace: dgca-test
+spec:
+  clusterServiceClassExternalName: destination
+  clusterServicePlanExternalName: lite
+
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: destination-service-binding-booking-demo-frontend
+  namespace: dgca-test
+spec:
+  instanceRef:
+    name: destination-service-instance-booking-demo-frontend
