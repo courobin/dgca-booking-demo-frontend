@@ -42,7 +42,7 @@ spec:
         - name: regcred
       containers:
         - name: booking-demo-frontend-service
-          image: docker pull docker.pkg.github.com/courobin/dgca-booking-demo-frontend/dgca-booking-demo-frontend:latest
+          image: docker.pkg.github.com/courobin/dgca-booking-demo-frontend/dgca-booking-demo-frontend:latest
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
