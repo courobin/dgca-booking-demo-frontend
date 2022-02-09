@@ -200,15 +200,15 @@ const RecordCheckinPage = (props: any) => {
                     if (passenger.result?.result) {
                         switch (passenger.result.result) {
                             case 'OK':
-                                icon = <FontAwesomeIcon icon={faCheckCircle} color="green" key='icon' />
+                                icon = <FontAwesomeIcon icon={faCheckCircle as any} color="green" key='icon' />
                                 break;
 
                             case 'NOK':
-                                icon = <FontAwesomeIcon icon={faTimesCircle} color="red" key='icon' />
+                                icon = <FontAwesomeIcon icon={faTimesCircle as any} color="red" key='icon' />
                                 break;
 
                             case 'CHK':
-                                icon = <FontAwesomeIcon icon={faExclamationCircle} color="orange" key='icon' />
+                                icon = <FontAwesomeIcon icon={faExclamationCircle as any} color="orange" key='icon' />
                                 break;
 
                             default:
@@ -219,11 +219,11 @@ const RecordCheckinPage = (props: any) => {
                 }
                 case 401:
                 case 410:
-                    icon = <FontAwesomeIcon icon={faTimesCircle} color="red" key='icon' />;
+                    icon = <FontAwesomeIcon icon={faTimesCircle as any} color="red" key='icon' />;
                     break;
                 case 204:
                 default:
-                    icon = <FontAwesomeIcon icon={faCircle} color="lightgrey" key='icon' />;
+                    icon = <FontAwesomeIcon icon={faCircle as any} color="lightgrey" key='icon' />;
                     break;
             }
 
