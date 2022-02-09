@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: booking-demo-frontend
+  namespace: dgca-test
+  labels:
+    app: booking-demo-frontend
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  selector:
+    app: booking-demo-frontend
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booking-demo-frontend
+  namespace: dgca-test
+  labels:
+    app: booking-demo-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: booking-demo-frontend
+  template:
+    metadata:
+      labels:
+        app: booking-demo-frontend
+    spec:
+      volumes:
+        - name: destination
+          secret:
+            secretName: destination-service-binding-booking-demo-frontend
+        - name: xsuaa
+          secret:
+            secretName: uaa-service-binding-booking-demo-frontend
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: booking-demo-frontend-service
+          image: docker.pkg.github.com/courobin/dgca-booking-demo-frontend-service/dgca-booking-demo-frontend-service:1.0.7-c31b22b
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: dgca-booking-demo-frontend-service
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: https
+              containerPort: 443
+          volumeMounts:
+            - name: destination
+              mountPath: "/etc/secrets/sapcp/destination/destination-service-instance-booking-demo-frontend"
+              readOnly: true
+            - name: xsuaa
+              mountPath: "/etc/secrets/sapcp/xsuaa/uaa-service-instance-booking-demo-frontend"
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: uaa-service-instance-booking-demo-frontend
+  namespace: dgca-test
+spec:
+  clusterServiceClassExternalName: xsuaa
+  clusterServicePlanExternalName: application
+  parameters:
+    xsappname: xsuaa-kyma-booking-demo-frontend
+    tenant-mode: dedicated
+    oauth2-configuration:
+      redirect-uris:
+        - https://*/**
+
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: uaa-service-binding-booking-demo-frontend
+  namespace: dgca-test
+spec:
+  instanceRef:
+    name: uaa-service-instance-booking-demo-frontend
+
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: destination-service-instance-booking-demo-frontend
+  namespace: dgca-test
+spec:
+  clusterServiceClassExternalName: destination
+  clusterServicePlanExternalName: lite
+
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: destination-service-binding-booking-demo-frontend
+  namespace: dgca-test
+spec:
+  instanceRef:
+    name: destination-service-instance-booking-demo-frontend
