@@ -1,4 +1,4 @@
-FROM node as build
+FROM node:16 as build
 COPY public /app/public
 COPY src /app/src
 COPY package.json /app/package.json
